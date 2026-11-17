@@ -1,0 +1,5 @@
+{
+  "name": "claude-speak",
+  "owner": { "name": "Todd Kaiser" },
+  "plugins": [{ "name": "speak", "source": "./", "description": "Claude reads its answers aloud with local voices on Mac and Windows." }]
+}

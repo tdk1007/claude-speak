@@ -1,0 +1,7 @@
+{
+  "name": "speak",
+  "version": "0.5.0",
+  "description": "Claude reads its answers aloud with local voices on Mac and Windows: a bundled cloned voice or Kokoro. Read-last, Voice and Conversation buttons; stops when you start dictating.",
+  "types": "./types/index.d.ts",
+  "license": "MIT"
+}
