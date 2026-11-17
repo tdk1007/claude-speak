@@ -18,6 +18,10 @@ from common import args, lower_priority, serve  # noqa: E402
 opts = args()
 lower_priority()
 
+import torch  # noqa: E402
+
+torch.set_num_threads(2)  # the GPU does the work; leave the CPU to the game
+
 from f5_tts.api import F5TTS  # noqa: E402
 
 # The words spoken in --ref: --ref-text, else the .txt beside the WAV.

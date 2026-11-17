@@ -4,7 +4,9 @@
 #   Cloned voice (NVIDIA GPU):  F5-TTS v1 on CUDA, light enough to run beside a VR game
 #                               (~0.8 GB VRAM), ~3 GB download with PyTorch
 #
-# Everything goes in %LOCALAPPDATA%\claude-speak. The mod runs this for you
+# Everything goes in %USERPROFILE%\.local\share\claude-speak, Python included. Not AppData:
+# the Claude desktop app is a Store app, and what it (or this script, started from it) writes
+# under AppData lands in a private copy that a plain terminal never sees. The mod runs this for you
 # (the "Set up voices" button or /speak setup); you can also run it yourself:
 #   powershell -NoProfile -ExecutionPolicy Bypass -File setup\setup-windows.ps1
 #   powershell -NoProfile -ExecutionPolicy Bypass -File setup\setup-windows.ps1 -KokoroOnly
@@ -14,8 +16,11 @@ $ProgressPreference = 'SilentlyContinue'  # Invoke-WebRequest is many times fast
 $env:HF_HUB_DISABLE_PROGRESS_BARS = '1'; $env:TQDM_DISABLE = '1'; $env:TRANSFORMERS_VERBOSITY = 'error'
 
 $Here = Split-Path -Parent $PSScriptRoot
-$Data = Join-Path $env:LOCALAPPDATA 'claude-speak'
+$Data = Join-Path $env:USERPROFILE '.local\share\claude-speak'
 New-Item -ItemType Directory -Force -Path $Data, "$Data\tmp" | Out-Null
+# uv keeps its Pythons and cache under AppData by default; keep them here too (see above).
+$env:UV_PYTHON_INSTALL_DIR = "$Data\python"
+$env:UV_CACHE_DIR = "$Data\uv-cache"
 function Step($m) { Write-Output ""; Write-Output "==> $m" }
 function Run { & $args[0] $args[1..($args.Count - 1)]; if ($LASTEXITCODE) { throw "failed: $($args -join ' ')" } }
 
@@ -59,7 +64,7 @@ if (-not $KokoroOnly -and $gpu) {
   $env:VIRTUAL_ENV = "$Data\clone\.venv"
   # CUDA 12.8 wheels: the only ones with kernels for RTX 50-series (Blackwell) cards; they also run on older cards.
   Run $uv pip install -q 'torch==2.8.0+cu128' 'torchaudio==2.8.0+cu128' --index-url https://download.pytorch.org/whl/cu128
-  Run $uv pip install -q 'f5-tts' 'soundfile>=0.12'
+  Run $uv pip install -q 'f5-tts==1.1.22' 'soundfile>=0.12'
   Step 'Cloned voice: downloading the model and saying a test line'
   $py = "$Data\clone\.venv\Scripts\python.exe"
   $test = @'

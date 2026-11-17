@@ -19,11 +19,11 @@ test('Mac commands use the Mac services and setup', async () => {
 })
 
 test('Windows commands use F5, PowerShell and quoted paths', async () => {
-  const h = hostFrom('windows', 'C:\\Users\\Sam Lee\\speak', 'C:\\Users\\Sam Lee\\AppData\\Local\r\n')
-  expect(h.data).toBe('C:\\Users\\Sam Lee\\AppData\\Local\\claude-speak')
-  expect(h.tmp).toBe('C:\\Users\\Sam Lee\\AppData\\Local\\claude-speak\\tmp')
+  const h = hostFrom('windows', 'C:\\Users\\Sam Lee\\speak', 'C:\\Users\\Sam Lee\r\n')
+  expect(h.data).toBe('C:\\Users\\Sam Lee\\.local\\share\\claude-speak')
+  expect(h.tmp).toBe('C:\\Users\\Sam Lee\\.local\\share\\claude-speak\\tmp')
   const clone = serviceArgv(h, 'clone')
-  expect(clone[0]).toBe('C:\\Users\\Sam Lee\\AppData\\Local\\claude-speak\\clone\\.venv\\Scripts\\python.exe')
+  expect(clone[0]).toBe('C:\\Users\\Sam Lee\\.local\\share\\claude-speak\\clone\\.venv\\Scripts\\python.exe')
   expect(clone.includes('C:\\Users\\Sam Lee\\speak\\services\\clone\\server_windows.py')).toBe(true)
   expect(clone.includes('C:\\Users\\Sam Lee\\speak\\voice\\ref-short.wav')).toBe(true)
   expect(clone[clone.indexOf('--idle') + 1]).toBe('900')

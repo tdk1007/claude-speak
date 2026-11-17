@@ -23,14 +23,16 @@ export function join(os: OS, ...parts: string[]): string {
 // The command that prints the folder the data lives under.
 export function homeProbe(os: OS): string[] {
   return os === 'windows'
-    ? ['powershell', '-NoProfile', '-Command', "[Environment]::GetFolderPath('LocalApplicationData')"]
+    ? ['powershell', '-NoProfile', '-Command', '$env:USERPROFILE']
     : ['/bin/sh', '-c', 'printf %s "$HOME"']
 }
 
 export function hostFrom(os: OS, root: string, probed: string): Host {
   const base = probed.trim()
   if (os === 'windows') {
-    const data = join(os, base, 'claude-speak')
+    // Not under AppData: the Claude desktop app is a Store app, and what its children write
+    // there lands in a private copy a plain terminal never sees.
+    const data = join(os, base, '.local', 'share', 'claude-speak')
     return { os, root, data, tmp: join(os, data, 'tmp') }
   }
   return { os, root, data: join(os, base, '.local', 'share', 'claude-speak'), tmp: '/tmp/claude-speak' }

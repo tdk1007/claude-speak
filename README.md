@@ -27,7 +27,7 @@ Then click **⚙ Set up voices** above the prompt (or type `/speak setup`). The 
 | Kokoro (stock voices, CPU) | any Mac | any PC |
 | Cloned voice | Apple silicon (M1 or later): Chatterbox Turbo on the GPU via MLX | NVIDIA GPU: F5-TTS v1 on CUDA, light enough to run beside a game (~0.8 GB VRAM) |
 | Download, first run | ~3.5 GB | ~4 GB (PyTorch with CUDA plus the model) |
-| Installed to | `~/.local/share/claude-speak` | `%LOCALAPPDATA%\claude-speak` |
+| Installed to | `~/.local/share/claude-speak` | `%USERPROFILE%\.local\share\claude-speak` |
 
 Setup installs [uv](https://docs.astral.sh/uv/) if it is missing, and uv fetches its own Python, so nothing else needs to be on the computer first. On a computer that can't run the cloned voice, setup installs Kokoro only and the mod uses that. Before setup, or if a voice fails to start, the mod falls back to the computer's own system voice.
 
@@ -46,7 +46,7 @@ The bundled voice in `voice/` is synthetic. It was generated, not recorded from 
 - `hooks/`: the mod (a Claude Code hooks module). `platform.ts` reads the system off the mod's own folder and builds every command for Mac or Windows.
 - `services/`: small Python services on `127.0.0.1` (Kokoro on port 47711, the cloned voice on 47712). They start on the first reading, make the next clip while the current one plays, and quit after an idle hour (15 minutes on Windows) to give the memory back. On Windows they run at below-normal CPU priority.
 - `services/mic/`: the microphone watchers. On a Mac it uses Core Audio's per-app list (macOS 14.2+; older versions watch the input device). On Windows it reads the same registry list as the taskbar's mic icon.
-- Logs: `/tmp/claude-speak/` on a Mac, `%LOCALAPPDATA%\claude-speak\tmp` on Windows (`events.log`, `kokoro.log`, `clone.log`). Setup writes `setup.log` to the install folder.
+- Logs: `/tmp/claude-speak/` on a Mac, `%USERPROFILE%\.local\share\claude-speak\tmp` on Windows (`events.log`, `kokoro.log`, `clone.log`). Setup writes `setup.log` to the install folder.
 
 ## Licenses
 
