@@ -33,6 +33,16 @@ Setup installs [uv](https://docs.astral.sh/uv/) if it is missing, and uv fetches
 
 You can also run setup yourself: `bash setup/setup-mac.sh` on a Mac, or `powershell -NoProfile -ExecutionPolicy Bypass -File setup\setup-windows.ps1` on Windows.
 
+## Install without GitHub (offline zip)
+
+For a machine that can't reach GitHub, use `speak-<version>-offline.zip`. It holds the whole mod plus the Kokoro model files, which normally download from GitHub.
+
+1. Unzip it somewhere it can stay, for example `~/claude-plugins/speak` (Mac) or `%USERPROFILE%\claude-plugins\speak` (Windows). The folder that holds `README.md` is the one to use.
+2. In a terminal: `claude plugin marketplace add ~/claude-plugins/speak`, then `claude plugin install speak@claude-speak`. Or put the folder's path in the `CLAUDE_CODE_PLUGIN_DIRS` setting (`:`-separated on a Mac, `;` on Windows).
+3. Start a new session and click **⚙ Set up voices**.
+
+Without GitHub, setup can't install uv, so it uses a Python 3.10 to 3.13 that's already on the machine (python.org or Homebrew; on Windows the `py` launcher). Python packages still come from PyPI, PyTorch from download.pytorch.org, and the cloned voice's model from huggingface.co. If those are blocked too, setup still finishes with Kokoro, and the cloned voice can be retried later with `/speak setup`.
+
 ## Commands
 
 `/speak` shows status. Also: `on` · `off` · `stop` · `test` · `setup` · `engine clone|kokoro|system` · `kvoice am_michael` (Kokoro voice) · `sysvoice <name>` · `sample <wav>` · `mic on|off` · `max <chars>` · `player powershell|engine` (Windows).
